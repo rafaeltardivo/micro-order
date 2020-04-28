@@ -1,14 +1,14 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Shipping
-from .serializers import ShippingSerializer
+from .models import Customer
+from .serializers import CustomerSerializer
 
 
-class ShippingViewSet(ModelViewSet):
-    """ModelViewSet definition for Shipping."""
-    queryset = Shipping.objects.all()
-    serializer_class = ShippingSerializer
+class CustomerViewSet(ModelViewSet):
+    """ModelViewSet definition for Customer."""
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
 
     def post(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)
