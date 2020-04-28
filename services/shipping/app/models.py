@@ -16,5 +16,3 @@ class Shipping(models.Model):
             self.made_at,
             self.order
         )
-
-
