@@ -9,7 +9,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        exclude = ("id", )
+        read_only = ("id", "made_at")
 
     def validate_customer(self, value):
         """Customer id validation."""
