@@ -3,6 +3,8 @@ from rest_framework.generics import CreateAPIView
 from .serializers import CustomerSerializer
 from .models import Customer
 
+from . import logger
+
 class CustomerCreateView(CreateAPIView):
     """CreateView definition for Customer."""
     queryset = Customer.objects.all()
