@@ -9,6 +9,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
+        fields = '__all__'
         read_only = ("id", "made_at")
 
     def validate_customer(self, value):
