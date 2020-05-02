@@ -1,19 +1,29 @@
 import logging
+import time
 
+import pika
 from decouple import config
 
-from .publishers import Publisher
+from .pubsub.consumers import Consumer
+from .pubsub.producers import Producer
+from .pubsub.utils import get_connection
 
-logging.basicConfig(level=logging.INFO)
+logFormatter = ('TIMESTAMP:%(asctime)s LEVEL:%(levelname)s MSG:%(message)s')
+logging.basicConfig(format=logFormatter, level=logging.INFO)
 logger = logging.getLogger('orders')
 
 retries = config('CONNECTION_RETRIES', default=3, cast=int)
 wait_time = config('SECONDS_BETWEEN_RETRIES', default=2, cast=int)
-broker_host = config('BROKER_HOST', default='rabbit')
+broker_host = config('BROKER_HOST', default='rabbit', cast=str)
 
-publisher = Publisher(retries, wait_time, broker_host)
-if not publisher.connection:
+connection = get_connection(retries, wait_time, broker_host)
+
+if not connection:
     logger.info('Could not connect to Broker!')
     raise SystemExit
 else:
-    logger.info('Successfully connected to broker.')
+    logger.info('Successfully connected to broker')
+
+consumer = Consumer(connection)
+producer = Producer(connection)
+producer.declare_exchange('orders')

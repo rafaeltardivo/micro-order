@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import Order
-from . import logger, publisher
+from . import logger, producer
 
 @receiver(post_save, sender=Order)
 def publish_order(sender, instance, created, **kwargs):
@@ -13,18 +13,13 @@ def publish_order(sender, instance, created, **kwargs):
 
     if created:
         payload = model_to_dict(instance)
-        publisher.publish_to(
+        producer.publish_to(
             exchange='orders',
             routing_key='orders_create',
             payload=json.dumps(payload)
         )
-        logger.info("Order: {} published. Payload: {}.".format(
-                instance.pk,
-                payload
-            ) 
-        )
     else:
-        logger.error("Could not publish Order {}!".format(
+        logger.error("Error creating Order {}!".format(
                 instance.pk
             )
         )
