@@ -13,6 +13,6 @@ class Shipping(models.Model):
         """Unicode representation of Shipping."""
         return 'Shipping {} made at {} associated to order id {}'.format(
             self.id,
-            self.made_at,
+            self.shipped_at,
             self.order
         )
