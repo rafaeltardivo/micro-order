@@ -1,7 +1,5 @@
 import logging
-import time
 
-import pika
 from decouple import config
 
 from .pubsub.consumers import Consumer
@@ -26,4 +24,4 @@ else:
 
 consumer = Consumer(connection)
 producer = Producer(connection)
-producer.declare_exchange('orders')
+producer.declare_exchange('orders_create')
