@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Customer(models.Model):
     """Model definition for Customer."""
     email = models.EmailField(max_length=254)
@@ -18,4 +19,3 @@ class Customer(models.Model):
             self.email,
             self.address
         )
-
