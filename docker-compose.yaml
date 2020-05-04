@@ -1,0 +1,90 @@
+version: '3'
+services:
+  orders:
+    container_name: "orders"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/orders &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - CONNECTION_RETRIES=${CONNECTION_RETRIES}
+      - CONNECTION_SECONDS_BETWEEN_RETRIES=${CONNECTION_SECONDS_BETWEEN_RETRIES}
+    restart: on-failure
+    ports: 
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/app/orders
+  shipping:
+    container_name: "shipping"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/shipping &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8001"
+    environment:
+      - CONNECTION_RETRIES=${CONNECTION_RETRIES}
+      - CONNECTION_SECONDS_BETWEEN_RETRIES=${CONNECTION_SECONDS_BETWEEN_RETRIES}
+    restart: on-failure
+    ports: 
+      - "8001:8001"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/app/shipping
+  customers:
+    container_name: "customers"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/customers &&
+              python manage.py migrate &&
+              python manage.py runserver 0.0.0.0:8002"
+    environment:
+      - CONNECTION_RETRIES=${CONNECTION_RETRIES}
+      - CONNECTION_SECONDS_BETWEEN_RETRIES=${CONNECTION_SECONDS_BETWEEN_RETRIES}
+    restart: on-failure
+    ports: 
+      - "8002:8002"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/app/customers
+  shipping_update_consumer:
+    container_name: "shipping_update_consumer"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/orders &&
+            python manage.py shippings_update_consumer"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+  orders_create_consumer:
+    container_name: "orders_create_consumer"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/shipping &&
+            python manage.py orders_create_consumer"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+  customers_detail_consumer:
+    container_name: "customers_detail_consumer"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/shipping &&
+              python manage.py customers_detail_consumer"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+  customers_request_consumer:
+    container_name: "customers_request_consumer"
+    build: .
+    command: bash -c "./wait_for_rabbit.sh && cd services/customers &&
+              python manage.py customers_request_consumer"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+      container_name: "rabbitmq"
+      hostname: "rabbitmq"
+      image: rabbitmq:3.8
+      command: rabbitmq-server
+      ports: 
+        - "5672:5672"
+

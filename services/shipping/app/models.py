@@ -9,7 +9,7 @@ class Shipping(models.Model):
 
     STATUS_CHOICES = [
         (PROCESSING, "PROCESSING"),
-        (SUCESS, "SUCESS"),
+        (SUCCESS, "SUCCESS"),
         (FAIL, "FAIL"),
     ]
     order = models.PositiveIntegerField()
