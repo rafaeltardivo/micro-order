@@ -1,7 +1,7 @@
-from django.urls import path
+from rest_framework import routers
 
-from .views import CustomerCreateView
+from .views import CustomerViewSet
 
-urlpatterns = [
-    path('', CustomerCreateView.as_view(), name='customer_create')
-]
+router = routers.SimpleRouter()
+router.register("", CustomerViewSet, base_name="shippings")
+urlpatterns = router.urls
