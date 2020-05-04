@@ -1,15 +1,20 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.viewsets import ModelViewSet
 
-from .serializers import CustomerSerializer
 from .models import Customer
+from .serializers import CustomerSerializer
 
-from . import logger
 
-class CustomerCreateView(CreateAPIView):
-    """CreateView definition for Customer."""
+class CustomerViewSet(ModelViewSet):
+    """ModelViewSet definition for Customer."""
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
     def post(self, request, *args, **kwargs):
-        logger.info("Customer create request", extra={'payload': request.data})
-        return super().post(request, *args, **kwargs)
+        raise MethodNotAllowed(request.method)
+
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
