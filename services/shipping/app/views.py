@@ -1,15 +1,20 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.viewsets import ModelViewSet
 
-from .serializers import ShippingSerializer
 from .models import Shipping
+from .serializers import ShippingSerializer
 
-from . import logger
 
-class ShippingListView(ListAPIView):
-    """ListView definition for Shipping."""
+class ShippingViewSet(ModelViewSet):
+    """ModelViewSet definition for Shipping."""
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
 
-    def list(self, request, *args, **kwargs):
-        logger.info("Shipping list request")
-        return super().list(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
+
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
