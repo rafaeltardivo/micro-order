@@ -1,6 +1,7 @@
+from app import consumer
 from app.models import Order
 
-from . import consumer, logger
+from . import logger
 
 
 def shippings_update_callback(channel, method, properties, payload):
@@ -11,7 +12,7 @@ def shippings_update_callback(channel, method, properties, payload):
         properties: Event properties
         payload (byte): Message payload
     Returns:
-        Producer singleton.
+        None.
     """
 
     if payload:
