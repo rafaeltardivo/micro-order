@@ -56,7 +56,7 @@ def customers_detail_callback(channel, method, properties, payload):
             )
             shipping_payload = None
         else:
-            shipping.status = Shipping.SUCESS
+            shipping.status = Shipping.SUCCESS
             shipping.save()
             shipping_payload = producer.shipping_update_schema().dumps(
                 shipping

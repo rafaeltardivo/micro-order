@@ -12,7 +12,7 @@ logger = logging.getLogger('customers')
 
 retries = config('CONNECTION_RETRIES', default=3, cast=int)
 wait_time = config('SECONDS_BETWEEN_RETRIES', default=2, cast=int)
-broker_host = config('BROKER_HOST', default='rabbit', cast=str)
+broker_host = config('BROKER_HOST', default="rabbitmq", cast=str)
 
 connection = get_connection(retries, wait_time, broker_host)
 

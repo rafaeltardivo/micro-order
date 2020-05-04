@@ -4,12 +4,12 @@ from django.db import models
 class Shipping(models.Model):
     """Model definition for Shipping."""
     PROCESSING = 1
-    SUCESS = 2
+    SUCCESS = 2
     FAIL = 3
 
     STATUS_CHOICES = [
         (PROCESSING, "PROCESSING"),
-        (SUCESS, "SUCESS"),
+        (SUCCESS, "SUCCESS"),
         (FAIL, "FAIL"),
     ]
     order = models.PositiveIntegerField()
