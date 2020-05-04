@@ -1,13 +1,10 @@
 import logging
-import time
 
-import pika
 from decouple import config
 
 from .pubsub.consumers import Consumer
 from .pubsub.producers import Producer
 from .pubsub.utils import get_connection
-
 
 logFormatter = ('TIMESTAMP:%(asctime)s MODULE:%(module)s MSG:%(message)s')
 logging.basicConfig(format=logFormatter, level=logging.INFO)
@@ -27,4 +24,5 @@ else:
 
 consumer = Consumer(connection)
 producer = Producer(connection)
-producer.declare_exchange('shippings')
+producer.declare_exchange('customers_request')
+producer.declare_exchange('shippings_update')
