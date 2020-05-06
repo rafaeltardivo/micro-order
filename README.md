@@ -30,7 +30,6 @@ make workers
 
 
 ## Services
-index.html) database.
 
 |  Service |  Port |
 |---|---|
