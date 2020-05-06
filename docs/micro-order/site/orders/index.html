@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Orders - micro-order</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Orders";
+    var mkdocs_page_input_path = "orders.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> micro-order</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Documentation</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Orders</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#orders-orders">Orders - /orders/</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#create">CREATE</a></li>
+        
+            <li><a class="toctree-l4" href="#detail">DETAIL</a></li>
+        
+            <li><a class="toctree-l4" href="#list">LIST</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../shippings/">Shippings</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../customers/">Customers</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">micro-order</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Documentation &raquo;</li>
+        
+      
+    
+    <li>Orders</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="orders-orders">Orders - <code>/orders/</code></h2>
+<table>
+<thead>
+<tr>
+<th>Permission level</th>
+<th>URL</th>
+<th>Method</th>
+<th>Format</th>
+<th>HTTP Status Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anonymous</td>
+<td><code>/orders/</code></td>
+<td><code>GET</code>, <code>POST</code></td>
+<td><code>json</code></td>
+<td><code>201</code>, <code>400</code></td>
+</tr>
+<tr>
+<td>Anonymous</td>
+<td><code>/orders/:id</code></td>
+<td><code>GET</code></td>
+<td><code>json</code></td>
+<td><code>200</code>, <code>404</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="create">CREATE</h3>
+<p><strong> Permission required </strong>: None</p>
+<h4 id="headers">Headers</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody>
+</table>
+<h4 id="request-content">Request Content</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Min Length</th>
+<th>Max Length</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer</code></td>
+<td>int</td>
+<td>yes</td>
+<td>1</td>
+<td>7</td>
+<td>Customer unique identification</td>
+</tr>
+</tbody>
+</table>
+<h4 id="response-content">Response Content</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>order id</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>str</td>
+<td><code>PROCESSING</code>, <code>SHIPPED</code> or <code>CANCELLED</code></td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td>int</td>
+<td>related customer id</td>
+</tr>
+<tr>
+<td><code>made_at</code></td>
+<td>datetime</td>
+<td>creation timestamp</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example">Example</h4>
+<p><strong>Event</strong>: Anonymous <code>POST</code> to <code>/orders/</code><br />
+<strong>Header Content</strong>:</p>
+<pre><code>Content-Type: application/json
+</code></pre>
+
+<p><strong>Body Content</strong>: </p>
+<pre><code>
+{
+    &quot;customer&quot;: &quot;1&quot;
+}
+
+</code></pre>
+
+<p><strong>HTTP Status Code</strong>: <code>201</code><br />
+<strong>Response Content</strong>:</p>
+<pre><code>{
+    &quot;id&quot;: 1,
+    &quot;status&quot;: &quot;PROCESSING&quot;,
+    &quot;customer&quot;: 1,
+    &quot;made_at&quot;: &quot;2020-05-06T17:27:21.241132Z&quot;
+}
+</code></pre>
+
+<h4 id="validations">Validations</h4>
+<p><strong>HTTP Status Code</strong>: <code>400</code>  </p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer</code></td>
+<td>Must be greater then 0.</td>
+<td>Customer id must be greater than 0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="detail">DETAIL</h3>
+<p><strong> Permission required </strong>: None</p>
+<h4 id="headers_1">Headers</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody>
+</table>
+<h4 id="request-content_1">Request Content</h4>
+<ul>
+<li>Add the order id to the URL: /orders/:id/</li>
+</ul>
+<h4 id="response-content_1">Response Content</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>order id</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>str</td>
+<td><code>PROCESSING</code>, <code>SHIPPED</code> or <code>CANCELLED</code></td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td>int</td>
+<td>related customer id</td>
+</tr>
+<tr>
+<td><code>made_at</code></td>
+<td>datetime</td>
+<td>creation timestamp</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example_1">Example</h4>
+<p><strong>Event</strong>: Anonymous <code>GET</code> to <code>/orders/1/</code><br />
+<strong>Header Content</strong>:</p>
+<pre><code>Content-Type: application/json
+</code></pre>
+
+<p><strong>Body Content</strong>: <code>None</code></p>
+<pre><code></code></pre>
+
+<p><strong>HTTP Status Code</strong>: <code>200</code><br />
+<strong>Response Content</strong>:</p>
+<pre><code>{
+    &quot;id&quot;: 1,
+    &quot;status&quot;: &quot;PROCESSING&quot;,
+    &quot;customer&quot;: 1,
+    &quot;made_at&quot;: &quot;2020-05-06T17:27:21.241132Z&quot;
+}
+</code></pre>
+
+<h3 id="list">LIST</h3>
+<p><strong> Permission required </strong>: None</p>
+<h4 id="headers_2">Headers</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody>
+</table>
+<h4 id="request-content_2">Request Content</h4>
+<ul>
+<li>None</li>
+</ul>
+<h4 id="response-content_2">Response Content</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>int</td>
+<td>order id</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>str</td>
+<td><code>PROCESSING</code>, <code>SHIPPED</code> or <code>CANCELLED</code></td>
+</tr>
+<tr>
+<td><code>customer</code></td>
+<td>int</td>
+<td>related customer id</td>
+</tr>
+<tr>
+<td><code>made_at</code></td>
+<td>datetime</td>
+<td>creation timestamp</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example_2">Example</h4>
+<p><strong>Event</strong>: Anonymous <code>GET</code> to <code>/orders/</code><br />
+<strong>Header Content</strong>:</p>
+<pre><code>Content-Type: application/json
+</code></pre>
+
+<p><strong>Body Content</strong>: <code>None</code></p>
+<pre><code></code></pre>
+
+<p><strong>HTTP Status Code</strong>: <code>200</code><br />
+<strong>Response Content</strong>:</p>
+<pre><code>[
+  {
+    &quot;id&quot;: 1,
+    &quot;status&quot;: &quot;PROCESSING&quot;,
+    &quot;customer&quot;: 1,
+    &quot;made_at&quot;: &quot;2020-05-06T17:18:49.118929Z&quot;
+  },
+  {
+    &quot;id&quot;: 2,
+    &quot;status&quot;: &quot;PROCESSING&quot;,
+    &quot;customer&quot;: 1,
+    &quot;made_at&quot;: &quot;2020-05-06T17:19:06.068675Z&quot;
+  }
+]
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../shippings/" class="btn btn-neutral float-right" title="Shippings">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../shippings/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

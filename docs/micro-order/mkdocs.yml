@@ -1,0 +1,9 @@
+site_name: micro-order
+nav:
+    - Home: index.md
+    - API Documentation:
+      - Orders: orders.md
+      - Shippings: shippings.md
+      - Customers: customers.md
+theme: readthedocs
+
