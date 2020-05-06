@@ -58,4 +58,10 @@ services:
       command: rabbitmq-server
       ports:
         - "5672:5672"
-
+  docs:
+      container_name: "docs"
+      build: .
+      command: bash -c "cd docs/micro-order &&
+               mkdocs serve -a 0.0.0.0:9000"
+      ports:
+        - "9000:9000"
