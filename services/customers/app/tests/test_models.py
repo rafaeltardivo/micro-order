@@ -16,11 +16,11 @@ class CustomersModelTestCase(TestCase):
     def test_str(self):
         self.assertEqual(
             str(self.customer),
-            '1 - someuser@mail.com who lives at Bucketheadland, number 33'
+            '1 - someuser@email.com who lives at Bucketheadland, number 33'
         )
 
     def test_repr(self):
-        self.assertIs(
+        self.assertEqual(
             repr(self.customer),
-            'Customer(1,someuser@mail.com,Bucketheadland, number 33'
+            'Customer(1,someuser@email.com,Bucketheadland, number 33)'
         )
