@@ -1,23 +1,17 @@
-from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import (CreateModelMixin, ListModelMixin,
+                                   RetrieveModelMixin)
+from rest_framework.viewsets import GenericViewSet
 
-from . import logger
 from .models import Order
 from .serializers import OrderSerializer
 
 
-class OrderViewSet(ModelViewSet):
-    """ModelViewSet definition for Order."""
-
+class OrderViewSet(
+    GenericViewSet,
+    CreateModelMixin,
+    ListModelMixin,
+    RetrieveModelMixin,
+):
+    """Create/List/Detail view for Orders."""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-
-    def post(self, request, *args, **kwargs):
-        logger.info("CREATE request: {}".format(request.data))
-        return super().post(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed(request.method)
-
-    def destroy(self, request, *args, **kwargs):
-        raise MethodNotAllowed(request.method)
