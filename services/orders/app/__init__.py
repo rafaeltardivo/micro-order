@@ -8,8 +8,7 @@ logFormatter = ('TIMESTAMP:%(asctime)s LEVEL:%(levelname)s MSG:%(message)s')
 logging.basicConfig(format=logFormatter, level=logging.INFO)
 logger = logging.getLogger('orders')
 
-broker_host = "rabbitmq"
-connection = get_connection(broker_host)
+connection = get_connection()
 
 if not connection:
     logger.info('Could not connect to Broker!')
