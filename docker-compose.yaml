@@ -8,8 +8,9 @@ services:
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     environment:
-      - CONNECTION_RETRIES=5
-      - SECONDS_BETWEEN_RETRIES=3
+      - TRIES=5
+      - DELAY=3
+      - HOST="rabbitmq"
     restart: on-failure
     ports:
       - "8000:8000"
@@ -25,8 +26,9 @@ services:
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8001"
     environment:
-      - CONNECTION_RETRIES=5
-      - SECONDS_BETWEEN_RETRIES=3
+      - TRIES=5
+      - DELAY=3
+      - HOST="rabbitmq"
     restart: on-failure
     ports:
       - "8001:8001"
@@ -42,8 +44,9 @@ services:
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8002"
     environment:
-      - CONNECTION_RETRIES=5
-      - SECONDS_BETWEEN_RETRIES=3
+      - TRIES=5
+      - DELAY=3
+      - HOST="rabbitmq"
     restart: on-failure
     ports:
       - "8002:8002"
