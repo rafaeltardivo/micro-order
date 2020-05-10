@@ -8,7 +8,6 @@ class Customer(models.Model):
 
     class Meta:
         """Meta definition for Customer."""
-
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
 
