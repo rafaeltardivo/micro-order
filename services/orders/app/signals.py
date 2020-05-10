@@ -5,7 +5,7 @@ from . import logger, producer
 from .models import Order
 
 
-@receiver(post_save, sender=Order)
+@receiver(post_save, sender=Order, dispatch_uid='post_save_publish')
 def publish_order(sender, instance, created, **kwargs):
     """Publisher for the saved order.
         Args:
