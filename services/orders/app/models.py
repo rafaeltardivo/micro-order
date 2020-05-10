@@ -3,9 +3,9 @@ from django.db import models
 
 class Order(models.Model):
     """Model definition for Order."""
-    PROCESSING = 1
-    SHIPPED = 2
-    CANCELLED = 3
+    PROCESSING = 0
+    SHIPPED = 1
+    CANCELLED = 2
 
     STATUS_CHOICES = [
         (PROCESSING, "PROCESSING"),
@@ -23,9 +23,14 @@ class Order(models.Model):
 
     def __str__(self):
         """Unicode representation of Order."""
-        return 'Order {} made at {} customer id {} status {}.'.format(
-            self.id,
-            self.customer,
-            self.made_at,
-            self.status
+        return (
+            f'{self.pk} - made at {self.made_at} by customer'
+            f' {self.customer}. Status: {self.status}'
+        )
+
+    def __repr__(self):
+        """Unambiguous representation of an Order."""
+        return (
+            f'{self.__class__.__name__}'
+            f'({self.pk},{self.customer},{self.made_at},{self.status})'
         )

@@ -8,14 +8,16 @@ class Customer(models.Model):
 
     class Meta:
         """Meta definition for Customer."""
-
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
 
     def __str__(self):
         """Unicode representation of Customer."""
-        return 'Customer {} email {} address {}'.format(
-            self.id,
-            self.email,
-            self.address
+        return f'{self.pk} - {self.email} who lives at {self.address}'
+
+    def __repr__(self):
+        """Unambiguous representation of a Customer."""
+        return (
+            f'{self.__class__.__name__}'
+            f'({self.pk},{self.email},{self.address})'
         )
