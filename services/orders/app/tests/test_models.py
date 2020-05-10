@@ -20,11 +20,11 @@ class OrdersModelTestCase(TestCase):
     def test_str(self):
         self.assertEqual(
             str(self.order),
-            '1 - made at 2020-09-05 00:00:00+00:00 by customer1. Status: 1'
+            '1 - made at 2020-09-05 00:00:00 by customer 1. Status: 0'
         )
 
     def test_repr(self):
         self.assertEqual(
             repr(self.order),
-            'Order(1,1,2020-09-05 00:00:00+00:00,1)'
+            'Order(1,1,2020-09-05 00:00:00,0)'
         )
