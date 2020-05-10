@@ -3,9 +3,9 @@ from django.db import models
 
 class Order(models.Model):
     """Model definition for Order."""
-    PROCESSING = 1
-    SHIPPED = 2
-    CANCELLED = 3
+    PROCESSING = 0
+    SHIPPED = 1
+    CANCELLED = 2
 
     STATUS_CHOICES = [
         (PROCESSING, "PROCESSING"),
@@ -25,7 +25,7 @@ class Order(models.Model):
         """Unicode representation of Order."""
         return (
             f'{self.pk} - made at {self.made_at} by customer'
-            f'{self.customer}. Status: {self.status}'
+            f' {self.customer}. Status: {self.status}'
         )
 
     def __repr__(self):
