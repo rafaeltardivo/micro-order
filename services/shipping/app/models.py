@@ -3,9 +3,9 @@ from django.db import models
 
 class Shipping(models.Model):
     """Model definition for Shipping."""
-    PROCESSING = 1
-    SUCCESS = 2
-    FAIL = 3
+    PROCESSING = 0
+    SUCCESS = 1
+    FAIL = 2
 
     STATUS_CHOICES = [
         (PROCESSING, "PROCESSING"),
@@ -17,14 +17,19 @@ class Shipping(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES, default=PROCESSING)
 
     class Meta:
-        verbose_name = 'shipping'
-        verbose_name_plural = 'shippings'
+        verbose_name = 'Shipping'
+        verbose_name_plural = 'Shippings'
 
     def __str__(self):
         """Unicode representation of Shipping."""
-        return 'Shipping {} order {} shipped_at {} status {}'.format(
-            self.id,
-            self.order,
-            self.shipped_at,
-            self.status
+        return (
+            f'{self.pk} - shipped at {self.shipped_at} associated to'
+            f' {self.order}. Status {self.status}'
+        )
+
+    def __repr__(self):
+        """Unambiguous representation of a Shipping."""
+        return (
+            f'{self.__class__.__name__}'
+            f'({self.pk},{self.order},{self.shipped_at},{self.status})'
         )
