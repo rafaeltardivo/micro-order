@@ -1,5 +1,8 @@
-from app import consumer, logger, producer
+from app import logger, producer
 from app.models import Customer
+
+from .schemas import (customer_detail_schema, customer_request_schema,
+                      customer_shipping_schema)
 
 
 def customers_request_callback(channel, method, properties, payload):
@@ -13,16 +16,18 @@ def customers_request_callback(channel, method, properties, payload):
         None.
     """
 
-    shipping = consumer.customer_request_schema().loads(payload)
-    logger.info("Received shipping customer Payload: {}.".format(shipping))
+    shipping = customer_request_schema().loads(payload)
+    logger.info("Received shipping customer request payload: {}.".format(
+        shipping)
+    )
     try:
         customer = Customer.objects.get(id=shipping['customer'])
     except Customer.DoesNotExist:
-        shipping_payload = None
+        shipping['customer'] = {}
     else:
-        shipping['customer'] = producer.customer_detail_schema().dump(customer)
-        shipping_payload = producer.customer_shipping_schema().dumps(shipping)
+        shipping['customer'] = customer_detail_schema().dump(customer)
     finally:
+        shipping_payload = customer_shipping_schema().dumps(shipping)
         producer.publish_to(
             exchange='customers_detail',
             routing_key='customers_detail',
