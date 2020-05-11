@@ -3,6 +3,7 @@ from django.dispatch import receiver
 
 from . import logger, producer
 from .models import Order
+from .pubsub.schemas import order_create_schema
 
 
 @receiver(post_save, sender=Order, dispatch_uid='post_save_publish')
@@ -19,7 +20,7 @@ def publish_order(sender, instance, created, **kwargs):
 
     if created:
         logger.info("Created order: {}".format(instance.pk))
-        payload = producer.order_create_schema().dumps(instance)
+        payload = order_create_schema().dumps(instance)
         producer.publish_to(
             exchange="orders_create",
             routing_key="orders_create",
