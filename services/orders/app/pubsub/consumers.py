@@ -1,6 +1,3 @@
-from marshmallow import Schema, fields
-
-
 class Consumer:
     __instance = None
 
@@ -28,10 +25,3 @@ class Consumer:
         else:
             Consumer.__instance = self
             Consumer.__instance.connection = connection
-            Consumer.__instance.shipping_update_schema = Schema.from_dict(
-                {
-                    'id': fields.Integer(),
-                    'order': fields.Integer(),
-                    'status': fields.Integer()
-                }
-            )
