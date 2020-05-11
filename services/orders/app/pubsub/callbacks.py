@@ -1,7 +1,7 @@
-from app import consumer
 from app.models import Order
 
 from . import logger
+from .schemas import shipping_update_schema
 
 
 def shippings_update_callback(channel, method, properties, payload):
@@ -16,7 +16,7 @@ def shippings_update_callback(channel, method, properties, payload):
     """
 
     if payload:
-        shipping_payload = consumer.shipping_update_schema().loads(payload)
+        shipping_payload = shipping_update_schema().loads(payload)
         logger.info("Received shipping update payload: {}".format(
                  shipping_payload
             )

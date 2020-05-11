@@ -7,7 +7,6 @@ from .models import Order
 class OrderSerializer(serializers.ModelSerializer):
     """Serializer definition for Order."""
     status = serializers.CharField(source="get_status_display", read_only=True)
-    made_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Order

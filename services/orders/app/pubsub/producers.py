@@ -1,5 +1,3 @@
-from marshmallow import Schema, fields
-
 from . import logger
 
 
@@ -31,12 +29,6 @@ class Producer:
             Producer.__instance = self
             Producer.__instance.connection = connection
             Producer.__instance.exchanges = dict()
-            Producer.__instance.order_create_schema = Schema.from_dict(
-                {
-                    'id': fields.Integer(),
-                    'customer': fields.Integer()
-                }
-            )
 
     def declare_exchange(self, exchange):
         """Declare and store exchange.

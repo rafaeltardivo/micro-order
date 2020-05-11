@@ -1,5 +1,8 @@
-from app import consumer, logger, producer
+from app import logger, producer
 from app.models import Shipping
+
+from .schemas import (customer_detail_schema, customer_request_schema,
+                      order_create_schema, shipping_update_schema)
 
 
 def orders_create_callback(channel, method, properties, payload):
@@ -13,11 +16,11 @@ def orders_create_callback(channel, method, properties, payload):
         None.
     """
 
-    order = consumer.order_create_schema().loads(payload)
-    logger.info("Received order Payload: {}".format(order))
+    order = order_create_schema().loads(payload)
+    logger.info("Received order payload: {}".format(order))
     new_shipping = Shipping.objects.create(order=order['id'])
 
-    shipping_payload = producer.customer_request_schema().dumps(
+    shipping_payload = customer_request_schema().dumps(
         {
             'id': new_shipping.pk,
             'customer': order['customer']
@@ -42,11 +45,12 @@ def customers_detail_callback(channel, method, properties, payload):
     """
 
     if payload:
-        shipping_customer = consumer.customer_detail_schema().loads(payload)
-        logger.info("Received shipping customer Payload: {}".format(
+        shipping_customer = customer_detail_schema().loads(payload)
+        logger.info("Received shipping customer detail payload: {}".format(
                  shipping_customer
             )
         )
+
         try:
             shipping = Shipping.objects.get(id=shipping_customer['id'])
         except Shipping.DoesNotExist:
@@ -56,9 +60,12 @@ def customers_detail_callback(channel, method, properties, payload):
             )
             shipping_payload = None
         else:
-            shipping.status = Shipping.SUCCESS
+            if not len(shipping_customer['customer']):
+                shipping.status = Shipping.FAIL
+            else:
+                shipping.status = Shipping.SUCCESS
             shipping.save()
-            shipping_payload = producer.shipping_update_schema().dumps(
+            shipping_payload = shipping_update_schema().dumps(
                 shipping
             )
         finally:
