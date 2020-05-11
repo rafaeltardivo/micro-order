@@ -1,6 +1,3 @@
-from marshmallow import Schema, fields
-
-
 class Consumer:
     __instance = None
 
@@ -28,22 +25,3 @@ class Consumer:
         else:
             Consumer.__instance = self
             Consumer.__instance.connection = connection
-            Consumer.__instance.order_create_schema = Schema.from_dict(
-                {
-                    'id': fields.Integer(),
-                    'customer': fields.Integer()
-                }
-            )
-            Consumer.__instance.customer_detail_schema = Schema.from_dict(
-                {
-                    'id': fields.Integer(),
-                    'customer': fields.Nested(
-                        Schema.from_dict(
-                            {
-                                'email': fields.Email(),
-                                'address': fields.Str()
-                            }
-                        )
-                    )
-                }
-            )
