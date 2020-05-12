@@ -15,14 +15,19 @@ def shippings_update_callback(channel, method, properties, payload):
         None.
     """
 
-    shipping_payload = shipping_update_schema().loads(payload)
-    logger.info(f'Received shipping update payload: {shipping_payload}')
+    payload = shipping_update_schema().loads(payload)
+    logger.info(
+        (
+            f"Received shipping update payload - id:{payload['id']}"
+            f" order:{payload['order']} status:{payload['status']}"
+        )
+    )
     try:
-        order = Order.objects.get(id=shipping_payload['order'])
+        order = Order.objects.get(id=payload['order'])
     except Order.DoesNotExist:
-        logger.info(f"Could not find order: {shipping_payload['order']}")
+        logger.error(f"Could not find order: {payload['order']}")
     else:
         logger.info(f'Retrieved order: {order}')
-        order.status = shipping_payload['status']
+        order.status = payload['status']
         order.save()
         logger.info(f'Updated order: {order.pk}')
