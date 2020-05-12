@@ -17,15 +17,19 @@ def orders_create_callback(channel, method, properties, payload):
         None.
     """
 
-    order_payload = order_create_schema().loads(payload)
-    logger.info(f'Received order payload: {order_payload}')
-    shipping = Shipping.objects.create(order=order_payload['id'])
-    logger.info(f'Created shipping: {shipping}')
-
+    payload = order_create_schema().loads(payload)
+    logger.info(
+        (
+            f"Received order payload - id:{payload['id']}"
+            f" customer:{payload['customer']}"
+        )
+    )
+    shipping = Shipping.objects.create(order=payload['id'])
+    logger.info(f'Created shipping: {str(shipping)}')
     shipping_payload = customer_request_schema().dumps(
         {
             'id': shipping.pk,
-            'customer': order_payload['customer']
+            'customer': payload['customer']
         }
     )
     producer.publish_to(
@@ -46,18 +50,22 @@ def customers_detail_callback(channel, method, properties, payload):
         None.
     """
 
-    shipping_customer = customer_detail_schema().loads(payload)
+    payload = customer_detail_schema().loads(payload)
     logger.info(
-        f'Received shipping customer detail payload: {shipping_customer}'
+        (
+            f"Received shipping customer detail payload - id:{payload['id']}"
+            f" customer email:{payload['customer'].get('email')}"
+            f" customer address:{payload['customer'].get('address')}"
+        )
     )
     try:
-        shipping = Shipping.objects.get(id=shipping_customer['id'])
+        shipping = Shipping.objects.get(id=payload['id'])
     except Shipping.DoesNotExist:
-        logger.info(f"Could not find shipping: {shipping_customer['id']}")
+        logger.error(f"Could not find shipping: {payload['id']}")
         shipping_payload = {}
     else:
-        if not len(shipping_customer['customer']):
-            logger.info(f'Missing customer. Will set status to FAIL')
+        if not len(payload['customer']):
+            logger.error(f'Missing customer. Will set status to FAIL')
             shipping.status = Shipping.FAIL
         else:
             logger.info(f'Customer found. Will set status to SUCCESS')

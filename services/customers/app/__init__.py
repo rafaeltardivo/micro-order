@@ -1,13 +1,17 @@
-import logging
+import sys
+
+from loguru import logger
 
 from .pubsub.consumers import Consumer
 from .pubsub.producers import Producer
 from .pubsub.utils import get_connection
 
-logFormatter = ('TIMESTAMP:%(asctime)s LEVEL:%(levelname)s MSG:%(message)s')
-logging.basicConfig(format=logFormatter, level=logging.INFO)
-logger = logging.getLogger('customers')
-
+logger.remove()
+logger.add(
+    sys.stdout,
+    colorize=True,
+    format="<green>{time}</green> <blue>{level}</blue> {message}",
+)
 
 connection = get_connection()
 

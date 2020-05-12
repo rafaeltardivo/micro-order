@@ -1,5 +1,5 @@
 import json
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 from django.test import TestCase
 from freezegun import freeze_time
@@ -20,16 +20,18 @@ class CallbacksTestCase(TestCase):
                 'customer': 1
             }
         )
-        with freeze_time('2020-09-05'):
-            orders_create_callback(None, None, None, payload)
-
-        self.assertEqual(mocked_logger.call_count, 2)
-        mocked_logger.assert_called_with(
+        expected_calls = [
+            "Received order payload - id:1 customer:1",
             (
                 'Created shipping: 1 - shipped at 2020-09-05 00:00:00'
                 ' associated to 1. Status 0'
             )
-        )
+        ]
+        with freeze_time('2020-09-05'):
+            orders_create_callback(None, None, None, payload)
+
+        self.assertEqual(mocked_logger.call_count, 2)
+        mocked_logger.assert_has_calls([call(item) for item in expected_calls])
         mocked_producer.assert_called_once()
         self.assertTrue(Shipping.objects.count() == 1)
 
@@ -38,7 +40,6 @@ class CallbacksTestCase(TestCase):
     def test_customers_detail_callback(self, mocked_producer, mocked_logger):
         with freeze_time('2020-09-05'):
             shipping = ShippingFactory()
-
         payload = json.dumps({
                 'id': shipping.pk,
                 'customer': {
@@ -47,37 +48,50 @@ class CallbacksTestCase(TestCase):
                 }
             }
         )
+        expected_calls = [
+             (
+                f"Received shipping customer detail payload - id:{shipping.pk}"
+                f" customer email:someuser@email.com"
+                f" customer address:Bucketheadland, number 33"
+             ),
+             'Customer found. Will set status to SUCCESS'
+        ]
         customers_detail_callback(None, None, None, payload)
         self.assertEqual(mocked_logger.call_count, 2)
-        mocked_logger.assert_called_with(
-            'Customer found. Will set status to SUCCESS'
-        )
+        mocked_logger.assert_has_calls([call(item) for item in expected_calls])
         mocked_producer.assert_called_once()
 
+    @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
     @patch('app.producer.publish_to', return_value=None)
     def test_customers_detail_callback_missing_customer(
-        self, mocked_producer, mocked_logger
+        self, mocked_producer, mocked_info_logger, mocked_error_log
     ):
         with freeze_time('2020-09-05'):
             shipping = ShippingFactory()
-
-        payload = json.dumps({
-                'id': shipping.pk,
-                'customer': {}
-            }
+            payload = json.dumps({
+                    'id': shipping.pk,
+                    'customer': {}
+                }
+            )
+            customers_detail_callback(None, None, None, payload)
+        mocked_info_logger.assert_called_with(
+            (
+                f"Received shipping customer detail payload - id:{shipping.pk}"
+                f" customer email:None"
+                f" customer address:None"
+             )
         )
-        customers_detail_callback(None, None, None, payload)
-        self.assertEqual(mocked_logger.call_count, 2)
-        mocked_logger.assert_called_with(
+        mocked_error_log.assert_called_with(
             'Missing customer. Will set status to FAIL'
         )
         mocked_producer.assert_called_once()
 
+    @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
     @patch('app.producer.publish_to', return_value=None)
-    def customers_detail_callback_missing_shipping(
-        self, mocked_producer, mocked_logger
+    def test_customers_detail_callback_missing_shipping(
+        self, mocked_producer, mocked_info_logger, mocked_error_log
     ):
         payload = json.dumps({
                 'id': 99,
@@ -85,7 +99,12 @@ class CallbacksTestCase(TestCase):
             }
         )
         customers_detail_callback(None, None, None, payload)
-        self.assertEqual(mocked_logger.call_count, 2)
-        mocked_logger.assert_called_with(
-            'Could not find shipping: 99'
+        mocked_info_logger.assert_called_with(
+            (
+                f"Received shipping customer detail payload - id:99"
+                f" customer email:None"
+                f" customer address:None"
+             )
         )
+        mocked_error_log.assert_called_with('Could not find shipping: 99')
+        mocked_producer.assert_called_once()

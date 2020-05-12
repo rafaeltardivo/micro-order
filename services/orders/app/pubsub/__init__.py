@@ -1,5 +1,9 @@
-import logging
+import sys
 
-logFormatter = ('TIMESTAMP:%(asctime)s MODULE:%(module)s MSG:%(message)s')
-logging.basicConfig(format=logFormatter, level=logging.INFO)
-logger = logging.getLogger(__name__)
+from loguru import logger
+
+logger.add(
+    sys.stdout,
+    colorize=True,
+    format="<green>{time}</green> <blue>{level}</blue> {message}"
+)
