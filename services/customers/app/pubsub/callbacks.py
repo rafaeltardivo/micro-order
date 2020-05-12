@@ -16,18 +16,23 @@ def customers_request_callback(channel, method, properties, payload):
     Returns:
         None.
     """
-    shipping = customer_request_schema().loads(payload)
-    logger.info(f'Received shipping customer request payload: {shipping}')
+    payload = customer_request_schema().loads(payload)
+    logger.info(
+        (
+            f'Received shipping customer request payload'
+            f" - id:{payload['id']} customer:{payload['customer']}"
+        )
+    )
     try:
-        customer = Customer.objects.get(id=shipping['customer'])
+        customer = Customer.objects.get(id=payload['customer'])
     except Customer.DoesNotExist:
-        logger.info(f"Could not find customer: {shipping['customer']}")
-        shipping['customer'] = {}
+        logger.error(f"Could not find customer: {payload['customer']}")
+        payload['customer'] = {}
     else:
         logger.info(f'Retrieved customer: {customer}')
-        shipping['customer'] = customer_detail_schema().dump(customer)
+        payload['customer'] = customer_detail_schema().dump(customer)
     finally:
-        shipping_payload = customer_shipping_schema().dumps(shipping)
+        shipping_payload = customer_shipping_schema().dumps(payload)
         producer.publish_to(
             exchange='customers_detail',
             routing_key='customers_detail',
