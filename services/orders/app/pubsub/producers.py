@@ -1,8 +1,11 @@
+import pika
+
 from . import logger
 
 
 class Producer:
     __instance = None
+
 
     @staticmethod
     def get_instance(connection):
@@ -17,6 +20,7 @@ class Producer:
             Producer(connection)
             return Producer.__instance
 
+
     def __init__(self, connection):
         """Virtually private constructor for Producer singleton.
         Args:
@@ -29,6 +33,7 @@ class Producer:
             Producer.__instance = self
             Producer.__instance.connection = connection
             Producer.__instance.exchanges = dict()
+
 
     def declare_exchange(self, exchange):
         """Declare and store exchange.
@@ -46,6 +51,7 @@ class Producer:
             channel.exchange_declare(exchange=exchange)
             self.exchanges[exchange] = channel
             logger.info('Created exchange {}'.format(exchange))
+
 
     def publish_to(self, exchange, routing_key, payload):
         """Publish payload to exchange.
@@ -65,6 +71,9 @@ class Producer:
             channel.basic_publish(
                 exchange=exchange,
                 routing_key=routing_key,
-                body=payload
+                body=payload,
+                properties=pika.BasicProperties(
+                    delivery_mode = 2
+                )
             )
             logger.info('Published: {} to: {}'.format(payload, exchange))
