@@ -2,8 +2,11 @@ from app import producer
 from app.models import Customer
 
 from . import logger
-from .schemas import (customer_detail_schema, customer_request_schema,
-                      customer_shipping_schema)
+from .schemas import (
+    customer_detail_schema,
+    customer_request_schema,
+    customer_shipping_schema,
+)
 
 
 def customers_request_callback(channel, method, properties, payload):
@@ -38,3 +41,4 @@ def customers_request_callback(channel, method, properties, payload):
             routing_key='customers_detail',
             payload=shipping_payload
         )
+    channel.basic_ack(delivery_tag=method.delivery_tag)
