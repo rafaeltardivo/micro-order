@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   orders:
     container_name: "orders"
@@ -18,8 +19,9 @@ services:
       - rabbitmq
     volumes:
       - .:/app/orders
+
   shippings:
-    container_name: "shippings"
+    container_name: shippings
     build: .
     command: bash -c "./wait_for_rabbit.sh &&
              cd services/shipping &&
@@ -36,8 +38,9 @@ services:
       - rabbitmq
     volumes:
       - .:/app/shipping
+
   customers:
-    container_name: "customers"
+    container_name: customers
     build: .
     command: bash -c "./wait_for_rabbit.sh &&
              cd services/customers &&
@@ -54,17 +57,18 @@ services:
       - rabbitmq
     volumes:
       - .:/app/customers
+
   rabbitmq:
-      container_name: "rabbitmq"
-      hostname: "rabbitmq"
-      image: rabbitmq:3.8
-      command: rabbitmq-server
-      ports:
-        - "5672:5672"
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3.8
+    command: rabbitmq-server
+    ports:
+      - "5672:5672"
+
   docs:
-      container_name: "docs"
-      build: .
-      command: bash -c "cd docs/micro-order &&
-               mkdocs serve -a 0.0.0.0:9000"
-      ports:
-        - "9000:9000"
+    container_name: docs
+    build: .
+    command: bash -c "cd docs/micro-order && mkdocs serve -a 0.0.0.0:9000"
+    ports:
+      - "9000:9000"
