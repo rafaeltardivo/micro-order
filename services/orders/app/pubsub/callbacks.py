@@ -31,3 +31,4 @@ def shippings_update_callback(channel, method, properties, payload):
         order.status = payload['status']
         order.save()
         logger.info(f'Updated order: {order.pk}')
+    channel.basic_ack(delivery_tag=method.delivery_tag)
