@@ -8,12 +8,13 @@ An (asynchronous, pubsub-based and microservice oriented) order app.
 - [Django REST Framework](https://www.django-rest-framework.org/) 3.10
 - [Docker](https://www.docker.com/) 19.03.06
 - [Docker Compose](https://docs.docker.com/compose/) 1.25.0
-- [Marshmallow](https://marshmallow.readthedocs.io/en/stable/)3.5.2
+- [Marshmallow](https://marshmallow.readthedocs.io/en/stable/) 3.5.2
 - [Pika](https://pika.readthedocs.io/en/stable/) 1.1.0
 - [Python](https://www.python.org/) 3.6.5
 - [Python Decouple](https://github.com/henriquebastos/) 3.3
 - [Rabbit MQ](https://www.rabbitmq.com/) 3.8
 - [Retry](https://pypi.org/project/retry/) 0.9
+- [Loguru](https://github.com/Delgan/loguru) 0.4.1
 
 ## How to run
 
@@ -29,10 +30,23 @@ An (asynchronous, pubsub-based and microservice oriented) order app.
 | shippings | `8001` |
 | customers | `8002` |
 
-### Observations
+## Services configuration parameters
 
-- The broker (`rabbitmq`) will run over the port 5672;
-- Each service will create a small [sqlite](https://www.sqlite.org/).
+|  Parameter     |  Description                                           |
+|----------------|--------------------------------------------------------|
+| TRIES          | Number of tries to estabilish connection with broker   |
+| DELAY          | Delay (seconds) between each try                       |
+| PER_WORKER_QOS | Maximum number of messages a work can handle at a time |
+| HOST           | Broker network address                                 |
+
+- Each service will create a small [sqlite](https://www.sqlite.org/) database.
+
+## Broker
+
+|  Service  |  Port  |
+|-----------|--------|
+| rabbitmq  | `5672` |
+
 
 ## Consumers (workers)
 
@@ -46,7 +60,7 @@ An (asynchronous, pubsub-based and microservice oriented) order app.
 ## Workflow
 
 1) Customer creation
-```
+```json
 curl --request POST \
   --url http://localhost:8002/customers/ \
   --header 'content-type: application/json' \
@@ -57,12 +71,12 @@ curl --request POST \
 ```
 
 2) Order creation (using the customer id)
-```
+```json
 curl --request POST \
   --url localhost:8000/orders/ \
   --header 'content-type: application/json' \
   --data '{
-  "customer": <<CUSTOMER_ID>>
+  "customer": 1
 }'
 ```
 
