@@ -12,6 +12,7 @@ services:
       - TRIES=5
       - DELAY=3
       - HOST="rabbitmq"
+      - PER_WORKER_QOS=5
     restart: on-failure
     ports:
       - "8000:8000"
@@ -31,6 +32,7 @@ services:
       - TRIES=5
       - DELAY=3
       - HOST="rabbitmq"
+      - PER_WORKER_QOS=5
     restart: on-failure
     ports:
       - "8001:8001"
@@ -50,6 +52,7 @@ services:
       - TRIES=5
       - DELAY=3
       - HOST="rabbitmq"
+      - PER_WORKER_QOS=5
     restart: on-failure
     ports:
       - "8002:8002"

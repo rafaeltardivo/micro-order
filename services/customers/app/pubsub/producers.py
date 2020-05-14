@@ -1,3 +1,5 @@
+import pika
+
 from . import logger
 
 
@@ -65,6 +67,9 @@ class Producer:
             channel.basic_publish(
                 exchange=exchange,
                 routing_key=routing_key,
-                body=payload
+                body=payload,
+                properties=pika.BasicProperties(
+                    delivery_mode = 2
+                )
             )
             logger.info('Published: {} to: {}'.format(payload, exchange))
