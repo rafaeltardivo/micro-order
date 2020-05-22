@@ -22,8 +22,8 @@ def publish_order(sender, instance, created, **kwargs):
         logger.info("Created order: {}".format(instance.pk))
         payload = order_create_schema().dumps(instance)
         producer.publish_to(
-            exchange="orders_create",
-            routing_key="orders_create",
+            exchange="orders",
+            routing_key="orders.create",
             payload=payload
         )
     else:
