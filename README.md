@@ -21,6 +21,7 @@ An (asynchronous, pubsub-based and microservice oriented) order app.
 1) Build: `make build`
 2) Run services: `make up`
 3) Run workers: `make workers`
+4) Run unit tests: `make test`
 
 ## Services
 
