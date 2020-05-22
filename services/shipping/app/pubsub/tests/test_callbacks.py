@@ -1,5 +1,5 @@
 import json
-from unittest.mock import call, patch
+from unittest.mock import call, patch, Mock
 
 from django.test import TestCase
 from freezegun import freeze_time
@@ -27,13 +27,20 @@ class CallbacksTestCase(TestCase):
                 ' associated to 1. Status 0'
             )
         ]
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
         with freeze_time('2020-09-05'):
-            orders_create_callback(None, None, None, payload)
+            orders_create_callback(mocked_channel, mocked_method, None, payload)
 
         self.assertEqual(mocked_logger.call_count, 2)
         mocked_logger.assert_has_calls([call(item) for item in expected_calls])
         mocked_producer.assert_called_once()
         self.assertTrue(Shipping.objects.count() == 1)
+        mocked_channel.basic_ack.assert_called_once()
 
     @patch('app.pubsub.logger.info')
     @patch('app.producer.publish_to', return_value=None)
@@ -56,10 +63,17 @@ class CallbacksTestCase(TestCase):
              ),
              'Customer found. Will set status to SUCCESS'
         ]
-        customers_detail_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
+        customers_detail_callback(mocked_channel, mocked_method, None, payload)
         self.assertEqual(mocked_logger.call_count, 2)
         mocked_logger.assert_has_calls([call(item) for item in expected_calls])
         mocked_producer.assert_called_once()
+        mocked_channel.basic_ack.assert_called_once()
 
     @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
@@ -67,6 +81,11 @@ class CallbacksTestCase(TestCase):
     def test_customers_detail_callback_missing_customer(
         self, mocked_producer, mocked_info_logger, mocked_error_log
     ):
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
         with freeze_time('2020-09-05'):
             shipping = ShippingFactory()
             payload = json.dumps({
@@ -74,7 +93,12 @@ class CallbacksTestCase(TestCase):
                     'customer': {}
                 }
             )
-            customers_detail_callback(None, None, None, payload)
+            customers_detail_callback(
+                mocked_channel,
+                mocked_method,
+                None,
+                payload
+            )
         mocked_info_logger.assert_called_with(
             (
                 f"Received shipping customer detail payload - id:{shipping.pk}"
@@ -86,6 +110,7 @@ class CallbacksTestCase(TestCase):
             'Missing customer. Will set status to FAIL'
         )
         mocked_producer.assert_called_once()
+        mocked_channel.basic_ack.assert_called_once()
 
     @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
@@ -98,7 +123,12 @@ class CallbacksTestCase(TestCase):
                 'customer': {}
             }
         )
-        customers_detail_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+        customers_detail_callback(mocked_channel, mocked_method, None, payload)
         mocked_info_logger.assert_called_with(
             (
                 f"Received shipping customer detail payload - id:99"
@@ -108,3 +138,4 @@ class CallbacksTestCase(TestCase):
         )
         mocked_error_log.assert_called_with('Could not find shipping: 99')
         mocked_producer.assert_called_once()
+        mocked_channel.basic_ack.assert_called_once()

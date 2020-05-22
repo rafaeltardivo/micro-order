@@ -18,5 +18,6 @@ else:
 
 consumer = Consumer(connection)
 producer = Producer(connection)
-producer.declare_exchange('customers_request')
-producer.declare_exchange('shippings_update')
+producer.declare_exchange('orders')
+producer.declare_exchange('shippings')
+producer.declare_exchange('customers')

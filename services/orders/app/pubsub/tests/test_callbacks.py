@@ -1,5 +1,5 @@
 import json
-from unittest.mock import call, patch
+from unittest.mock import call, patch, Mock
 
 from django.db.models.signals import post_save
 from django.test import TestCase
@@ -34,9 +34,16 @@ class CallbacksTestCase(TestCase):
             f'Retrieved order: {str(self.order)}',
             f'Updated order: {self.order.pk}'
         ]
-        shippings_update_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
+        shippings_update_callback(mocked_channel, mocked_method, None, payload)
         self.assertEqual(mocked_logger.call_count, 3)
         mocked_logger.assert_has_calls([call(item) for item in expected_calls])
+        mocked_channel.basic_ack.assert_called_once()
 
     @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
@@ -49,7 +56,13 @@ class CallbacksTestCase(TestCase):
                 'status': 1
             }
         )
-        shippings_update_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
+        shippings_update_callback(mocked_channel, mocked_method, None, payload)
         mocked_info_logger.assert_called_with(
             (
                 f"Received shipping update payload - id:1"
@@ -59,3 +72,4 @@ class CallbacksTestCase(TestCase):
         mocked_error_logger.assert_called_with(
             f'Could not find order: {self.order.pk + 99}'
         )
+        mocked_channel.basic_ack.assert_called_once()

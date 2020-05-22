@@ -37,8 +37,8 @@ def orders_create_callback(channel, method, properties, payload):
         }
     )
     producer.publish_to(
-        exchange='customers_request',
-        routing_key='customers_request',
+        exchange='customers',
+        routing_key='customers.request',
         payload=shipping_payload
     )
     channel.basic_ack(delivery_tag=method.delivery_tag)
@@ -79,8 +79,8 @@ def customers_detail_callback(channel, method, properties, payload):
         shipping_payload = shipping_update_schema().dumps(shipping)
     finally:
         producer.publish_to(
-            exchange='shippings_update',
-            routing_key='shippings_update',
+            exchange='shippings',
+            routing_key='shippings.update',
             payload=shipping_payload
         )
     channel.basic_ack(delivery_tag=method.delivery_tag)
