@@ -1,5 +1,5 @@
 import json
-from unittest.mock import call, patch
+from unittest.mock import call, patch, Mock
 
 from django.test import TestCase
 
@@ -28,10 +28,17 @@ class CallbacksTestCase(TestCase):
             ),
             f'Retrieved customer: {str(self.customer)}'
         ]
-        customers_request_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
+        customers_request_callback(mocked_channel, mocked_method, None, payload)
         self.assertEqual(mocked_logger.call_count, 2)
         mocked_logger.assert_has_calls([call(item) for item in expected_calls])
         mocked_producer.assert_called_once()
+        mocked_channel.basic_ack.assert_called_once()
 
     @patch('app.pubsub.logger.error')
     @patch('app.pubsub.logger.info')
@@ -44,7 +51,13 @@ class CallbacksTestCase(TestCase):
                 'customer': self.customer.pk + 99
             }
         )
-        customers_request_callback(None, None, None, payload)
+        mocked_channel = Mock()
+        mocked_channel.basic_ack.return_value = 'mocked return'
+
+        mocked_method = Mock()
+        mocked_method.delivery_tag.return_value = 'mocked tag'
+
+        customers_request_callback(mocked_channel, mocked_method, None, payload)
         mocked_info_logger.assert_called_with(
             (
                 f'Received shipping customer request payload'
