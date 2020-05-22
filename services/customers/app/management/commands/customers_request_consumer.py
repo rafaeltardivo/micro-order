@@ -10,9 +10,9 @@ class Command(BaseCommand):
     help = 'Command to start the consumer for customers'
 
     def handle(self, *args, **kwargs):
-        exchange = 'customers_request'
-        queue = 'customers_request_queue'
-        routing_key = 'customers_request'
+        exchange = 'customers'
+        queue = 'customers.request'
+        routing_key = 'customers.request'
 
         channel = consumer.connection.channel()
         channel.queue_declare(
